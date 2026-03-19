@@ -7,6 +7,9 @@ interface Props {
 }
 
 export const PeopleTable = ({ people, activeSlug }: Props) => {
+  const findPersonByName = (name: string | null) =>
+    people?.find(person => person.name === name);
+
   return (
     <>
       {!people ? (
@@ -28,38 +31,51 @@ export const PeopleTable = ({ people, activeSlug }: Props) => {
           </thead>
 
           <tbody>
-            {people.map(person => (
-              <tr
-                data-cy="person"
-                key={person.name}
-                className={
-                  person.slug === activeSlug
-                    ? 'has-background-warning'
-                    : undefined
-                }
-              >
-                <td>
-                  <a
-                    href={`#/people/${person.slug}`}
-                    className={
-                      person.sex === 'f' ? 'has-text-danger' : undefined
-                    }
-                  >
-                    {person.name}
-                  </a>
-                </td>
+            {people.map(person => {
+              const mother = findPersonByName(person.motherName);
+              const father = findPersonByName(person.fatherName);
 
-                <td>{person.sex}</td>
-                <td>{person.born}</td>
-                <td>{person.died}</td>
-                <td>
-                  <PersonLink name={person.motherName} people={people} />
-                </td>
-                <td>
-                  <PersonLink name={person.fatherName} people={people} />
-                </td>
-              </tr>
-            ))}
+              return (
+                <tr
+                  data-cy="person"
+                  key={person.name}
+                  className={
+                    person.slug === activeSlug
+                      ? 'has-background-warning'
+                      : undefined
+                  }
+                >
+                  <td>
+                    <a
+                      href={`#/people/${person.slug}`}
+                      className={
+                        person.sex === 'f' ? 'has-text-danger' : undefined
+                      }
+                    >
+                      {person.name}
+                    </a>
+                  </td>
+
+                  <td>{person.sex}</td>
+                  <td>{person.born}</td>
+                  <td>{person.died}</td>
+                  <td>
+                    {mother ? (
+                      <PersonLink person={mother} />
+                    ) : (
+                      person.motherName || '-'
+                    )}
+                  </td>
+                  <td>
+                    {father ? (
+                      <PersonLink person={father} />
+                    ) : (
+                      person.fatherName || '-'
+                    )}
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       )}

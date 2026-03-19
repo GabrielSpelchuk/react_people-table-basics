@@ -1,30 +1,18 @@
 import { Person } from '../../types';
 
 interface Props {
-  name: string | null;
-  people: Person[];
-  className?: string;
+  person: Person | undefined;
 }
 
-export const PersonLink = ({ name, people }: Props) => {
-  const found = people?.find(person => person.name === name) ?? null;
-
+export const PersonLink = ({ person }: Props) => {
   return (
     <>
-      {name ? (
-        found ? (
-          <a
-            href={`#/people/${found.slug}`}
-            className={found.sex === 'f' ? 'has-text-danger' : undefined}
-          >
-            {name}
-          </a>
-        ) : (
-          `${name}`
-        )
-      ) : (
-        '-'
-      )}
+      <a
+        href={`#/people/${person?.slug}`}
+        className={person?.sex === 'f' ? 'has-text-danger' : undefined}
+      >
+        {person?.name}
+      </a>
     </>
   );
 };
